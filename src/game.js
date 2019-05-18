@@ -19,27 +19,36 @@ var config = {
 var game = new Phaser.Game(config);
 var player;
 var cursors;
+// var gameWidth = game.sys.game.config.width;
+// var gameHeight = game.sys.game.config.height;
 
 function preload ()
 {
     this.load.image('tiles', 'assets/maps/medieval/tiles.png');
     this.load.tilemapCSV('map', 'assets/maps/medieval/map_top.csv');
+    this.load.tilemapCSV('background', 'assets/maps/medieval/map_bottom.csv');
     this.load.spritesheet('player', 'assets/sprites/spaceman.png', { frameWidth: 16, frameHeight: 16 });
 }
 
 function create ()
 {
     // When loading a CSV map, make sure to specify the tileWidth and tileHeight
-    var map = this.make.tilemap({ key: 'map', tileWidth: 16, tileHeight: 16 });
-    var tileset = map.addTilesetImage('tiles');
-    var layer = map.createStaticLayer(0, tileset, 0, 0);
+    var map = this.make.tilemap({ key: 'background', tileWidth: 16, tileHeight: 16 });
+    var tiles = map.addTilesetImage('tiles');
+    // var backgroundLayer = map.createDynamicLayer("background", tiles);
+    // let backgroundLayer = this.add.sprite(0, 0, 'background');
+    // backgroundLayer.setOrigin(0, 0);
+    var backgroundLayer = map.createStaticLayer(0, tiles, 0, 0);
+    var topLayer = map.createBlankDynamicLayer('layer1', tiles);
+    console.log(map);
+
 
     // This isn't totally accurate, but it'll do for now
-    layer.setCollisionBetween(54, 83);
+    // backgroundLayer.setCollisionBetween(54, 83);
 
     // If we don't have slopes in our map, we can simply specify what the default colliding tile's
     // slope ID should be. In this case, it would just be the ID for a solid rectangle, 1.
-    this.impact.world.setCollisionMapFromTilemapLayer(layer, { defaultCollidingSlope: 1 });
+    // this.impact.world.setCollisionMapFromTilemapLayer(backgroundLayer, { defaultCollidingSlope: 1 });
 
     this.anims.create({
         key: 'left',
